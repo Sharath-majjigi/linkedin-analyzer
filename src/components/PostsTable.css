@@ -1,0 +1,152 @@
+.posts-table-container {
+  overflow-x: auto;
+}
+
+.posts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.posts-table th {
+  background-color: #f8fafc;
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.posts-table td {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+
+.posts-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Cell types */
+.date-cell {
+  white-space: nowrap;
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.text-cell {
+  max-width: 300px;
+}
+
+.post-text {
+  line-height: 1.5;
+  color: #1e293b;
+}
+
+.type-cell {
+  white-space: nowrap;
+}
+
+.post-type {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.post-type-text {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.post-type-image {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.post-type-video {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.post-type-link-text {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+}
+
+.post-type-article {
+  background-color: #fce7f3;
+  color: #be185d;
+}
+
+.post-type-repost-wtext {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.post-type-unknown {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.number-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: #374151;
+}
+
+.link-cell {
+  text-align: center;
+}
+
+.post-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: #64748b;
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+}
+
+.post-link:hover {
+  background-color: #f1f5f9;
+  color: #3b82f6;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .posts-table th,
+  .posts-table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .text-cell {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .posts-table {
+    font-size: 0.75rem;
+  }
+  
+  .posts-table th,
+  .posts-table td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .text-cell {
+    max-width: 150px;
+  }
+  
+  .post-text {
+    font-size: 0.75rem;
+  }
+} 
