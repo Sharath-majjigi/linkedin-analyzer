@@ -165,16 +165,10 @@ app.get('/api/apify/results/:runId', async (req, res) => {
   }
 });
 
-// Only start server in development
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`🚀 Backend server running on port ${PORT}`);
-    console.log(`📡 API endpoints available:`);
-    console.log(`   POST http://localhost:${PORT}/api/apify/run`);
-    console.log(`   GET  http://localhost:${PORT}/api/apify/status/:runId`);
-    console.log(`   GET  http://localhost:${PORT}/api/apify/results/:runId`);
-  });
-}
-
-// Export for Vercel
-module.exports = app; 
+app.listen(PORT, () => {
+  console.log(`🚀 Backend server running on port ${PORT}`);
+  console.log(`📡 API endpoints available:`);
+  console.log(`   POST http://localhost:${PORT}/api/apify/run`);
+  console.log(`   GET  http://localhost:${PORT}/api/apify/status/:runId`);
+  console.log(`   GET  http://localhost:${PORT}/api/apify/results/:runId`);
+}); 

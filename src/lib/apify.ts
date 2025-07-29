@@ -2,9 +2,7 @@ import type { LinkedInPost } from '../types';
 import { storage } from './utils';
 
 // Use backend server to avoid CORS issues
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? '/api/apify' 
-  : 'http://localhost:3001/api/apify';
+const API_BASE_URL = 'http://localhost:3001/api/apify';
 
 export class ApifyAPI {
   private apiKey: string;

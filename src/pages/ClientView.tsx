@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { RefreshCw, ExternalLink } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { useClient, useUpdateClientPosts } from '../hooks/useClients';
 import { calculateAnalytics, formatDateTime } from '../lib/utils';
 import { createApifyAPI } from '../lib/apify';
