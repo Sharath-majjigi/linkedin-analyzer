@@ -1,16 +1,24 @@
 import type { LinkedInPost } from '../types';
 import { storage } from './utils';
 
-// Use backend server to avoid CORS issues
-const API_BASE_URL = 'http://localhost:3001/api/apify';
+// Call Apify API directly
+const APIFY_BASE_URL = 'https://api.apify.com/v2/acts/apimaestro~linkedin-profile-posts/run-sync-get-dataset-items';
 
 export class ApifyAPI {
   private apiKey: string;
 
   constructor() {
+    // Try to get API key from environment variable first (for development)
+    const envKey = import.meta.env.VITE_APIFY_API_KEY;
+    if (envKey) {
+      this.apiKey = envKey;
+      return;
+    }
+    
+    // Fall back to storage (for production)
     const key = storage.getApiKey();
     if (!key) {
-      throw new Error('Apify API key not found. Please set it in settings.');
+      throw new Error('Apify API key not found. Please set it in settings or environment variables.');
     }
     this.apiKey = key;
   }
@@ -34,30 +42,56 @@ export class ApifyAPI {
 
   // Start an actor run and get results immediately
   private async startActorRun(linkedinUrl: string): Promise<LinkedInPost[]> {
-    console.log('Making request to backend server...');
+    console.log('Making request to Apify API directly...');
     
-    const response = await fetch(`${API_BASE_URL}/run`, {
+    // Extract username from LinkedIn URL
+    const usernameMatch = linkedinUrl.match(/linkedin\.com\/in\/([^\/\?]+)/);
+    const username = usernameMatch ? usernameMatch[1] : linkedinUrl;
+    
+    console.log('Extracted username:', username);
+    
+    const response = await fetch(`${APIFY_BASE_URL}?token=${this.apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        linkedinUrl,
-        apiKey: this.apiKey
+        username: username,
+        max_posts: 100
       })
     });
 
     console.log('Response status:', response.status);
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.log('Error response:', errorData);
-      throw new Error(`Failed to start actor run: ${errorData.error || response.statusText}`);
+      const errorText = await response.text();
+      console.log('Error response:', errorText);
+      throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
     }
 
-    const data = await response.json();
-    console.log('Success response:', data);
-    return data.posts;
+    const posts = await response.json();
+    console.log(`Successfully fetched ${posts.length} posts`);
+    
+    // Filter posts since 2025-01-01
+    const cutoffDate = new Date('2025-01-01');
+    const filteredPosts = posts.filter((post: any) => {
+      // Check if post has the required date structure
+      if (!post.posted_at || !post.posted_at.date) {
+        console.log('Skipping post without valid date:', post.urn || 'unknown');
+        return false;
+      }
+      
+      try {
+        const postDate = new Date(post.posted_at.date);
+        return postDate >= cutoffDate;
+      } catch (error) {
+        console.log('Error parsing post date:', post.posted_at.date, 'for post:', post.urn || 'unknown');
+        return false;
+      }
+    });
+
+    console.log(`Filtered to ${filteredPosts.length} posts since 2025-01-01`);
+    return filteredPosts;
   }
 
 
@@ -66,14 +100,14 @@ export class ApifyAPI {
   async validateApiKey(): Promise<boolean> {
     try {
       // Test the API key by trying to start a run with a dummy URL
-      const response = await fetch(`${API_BASE_URL}/run`, {
+      const response = await fetch(`${APIFY_BASE_URL}?token=${this.apiKey}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          linkedinUrl: 'https://www.linkedin.com/in/test',
-          apiKey: this.apiKey
+          username: 'test',
+          max_posts: 1
         })
       });
       

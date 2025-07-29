@@ -17,7 +17,7 @@ A modern web application for tracking and analyzing LinkedIn post performance fo
 - **Styling**: CSS3 with modern design patterns
 - **State Management**: React Query (TanStack Query)
 - **Database**: Supabase (PostgreSQL)
-- **API Integration**: Apify LinkedIn Posts Scraper
+- **API Integration**: Apify LinkedIn Posts Scraper (Direct API calls)
 - **Icons**: Lucide React
 - **Date Handling**: date-fns
 
@@ -44,7 +44,10 @@ Create a `.env` file in the root directory:
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_APIFY_API_KEY=your_apify_api_key
 ```
+
+**Note**: Copy `env.example` to `.env` and fill in your actual values.
 
 ### 3. Supabase Setup
 
@@ -57,7 +60,8 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 1. Sign up at [apify.com](https://apify.com)
 2. Get your API key from the Apify Console
-3. The app will prompt you to enter this key in the settings modal
+3. Add it to your `.env` file for development
+4. For production, users will enter it in the settings modal
 
 ### 5. Start Development Server
 
@@ -66,8 +70,10 @@ npm install
 npm run dev
 ```
 
-This will start both the backend server (port 3001) and frontend (port 5173).
+This will start the frontend development server (port 5173).
 The application will be available at `http://localhost:5173`
+
+**Note**: The app makes direct API calls to Apify from the frontend.
 
 ## Usage
 
@@ -122,6 +128,39 @@ CREATE TABLE public.clients (
   cached_post_data JSONB
 );
 ```
+
+## Deployment
+
+### Vercel Deployment (Recommended)
+
+1. **Install Vercel CLI**:
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Deploy to Vercel**:
+   ```bash
+   vercel
+   ```
+
+3. **Your app will be deployed** as a static frontend!
+
+### Alternative Deployment Options
+
+- **Netlify**: Deploy the frontend with `npm run build`
+- **GitHub Pages**: Deploy the static build
+- **Any static hosting**: Works with any static file hosting service
+
+### API Keys in Production
+
+**For Production Deployment:**
+- **Supabase keys**: Can be set as environment variables in your hosting platform
+- **Apify API key**: Users will enter this in the app's settings modal (stored in browser localStorage)
+
+**Environment Variables for Production:**
+- `VITE_SUPABASE_URL` - Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anon key
+- `VITE_APIFY_API_KEY` - (Optional) Default Apify API key for users
 
 ## Security
 
